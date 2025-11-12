@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peptide Dosage Calculator | Executive Members</title>
+    <meta name="description" content="Professional peptide dosage calculator for precise reconstitution and injection calculations. Calculate exact dosages for peptide therapy.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            grid-column: 1 / -1;
+        }
+
+        .subreddit-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #ff6b35;
+            text-align: center;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #ffffff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+            font-weight: 400;
+        }
+
+        .calculator-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reset-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        .step-number {
+            background: #007AFF;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        select, input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        select {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        input[type="number"] {
+            flex: 1;
+        }
+
+        .unit-select {
+            min-width: 80px;
+        }
+
+        select:focus, input:focus {
+            border-color: #007AFF;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        select option {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #007AFF, #0056CC);
+            border: none;
+            border-radius: 15px;
+            padding: 16px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .calculate-btn:hover {
+            background: linear-gradient(135deg, #0056CC, #003D99);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 122, 255, 0.3);
+        }
+
+        .results {
+            background: rgba(0, 122, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 25px;
+            border: 1px solid rgba(0, 122, 255, 0.3);
+        }
+
+        .result-item {
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        .result-label {
+            color: #b0b0b0;
+            font-weight: 500;
+        }
+
+        .result-value {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .info-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            height: fit-content;
+        }
+
+        .info-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step {
+            margin-bottom: 25px;
+        }
+
+        .step h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .step p {
+            color: #b0b0b0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .example {
+            margin-top: 25px;
+        }
+
+        .example h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .example ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .example li {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .example li:before {
+            content: "•";
+            color: #007AFF;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .warning {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 25px;
+        }
+
+        .warning-title {
+            color: #FFC107;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .warning p {
+            color: #FFE082;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 15px;
+                gap: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .calculator-section, .info-section {
+                padding: 20px;
+            }
+
+            .input-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .unit-select {
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            
+            <div class="subreddit-title">r/USPeptides</div>
+            <h1>Peptide Dosage Calculator</h1>
+            <p class="subtitle">Professional pharmaceutical tool for precise peptide reconstitution and dosage calculations</p>
+        </div>
+
+        <div class="calculator-section">
+            <div class="section-header">
+                <h2 class="section-title">Calculator</h2>
+                <button class="reset-btn" onclick="resetCalculator()">🔄 Reset</button>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">
+                    <span class="step-number">1</span>
+                    Peptide Vial Amount
+                </label>
+                <div class="input-row">
+                    <select id="vialAmount" onchange="toggleCustomAmount()">
+                        <option value="custom">Custom</option>
+                        <option value="2000">2 mg</option>
+                        <option value="5000">5 mg</option>
+                        <option value="10000">10 mg</option>
+                        <option value="15000">15 mg</option>
+                    </select>
+                </div>
+                <div class="input-row" id="customAmountRow" style="margin-top: 10px;">
+                    <input type="number" id="customAmount" placeholder="Enter amount" step="0.1" min="0">
+                    <select id="customUnit" class="unit-select">
+                        <option value="mcg">mcg</option>
+                        <option value="mg">mg</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">
+                    <span class="step-number">2</span>
+                    Bacteriostatic Water Volume
+                </label>
+                <div class="input-row">
+                    <select id="waterVolume">
+                        <option value="1">1 mL</option>
+                        <option value="2" selected>2 mL</option>
+                        <option value="3">3 mL</option>
+                        <option value="5">5 mL</option>
+                        <option value="10">10 mL</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">
+                    <span class="step-number">3</span>
+                    Desired Dose Per Injection
+                </label>
+                <div class="input-row">
+                    <input type="number" id="desiredDose" placeholder="Enter dose" step="0.1" min="0">
+                    <select id="doseUnit" class="unit-select">
+                        <option value="mcg">mcg</option>
+                        <option value="mg">mg</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">
+                    <span class="step-number">4</span>
+                    Syringe Size
+                </label>
+                <div class="input-row">
+                    <select id="syringeSize">
+                        <option value="30">0.3 mL (30 units)</option>
+                        <option value="50">0.5 mL (50 units)</option>
+                        <option value="100" selected>1.0 mL (100 units)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="calculate-btn" onclick="calculateDosage()">
+                Calculate Dosage
+            </button>
+
+            <div class="results" id="results" style="display: none;">
+                <div class="result-item">
+                    <span class="result-label">Concentration:</span>
+                    <span class="result-value" id="concentration"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Injection Volume:</span>
+                    <span class="result-value" id="injectionVolume"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Syringe Units:</span>
+                    <span class="result-value" id="syringeUnits"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3 class="info-title">ℹ️ How It Works</h3>
+
+            <div class="step">
+                <h3>1. Concentration</h3>
+                <p>Divide vial amount (mcg) by water volume (mL) to get concentration (mcg/mL)</p>
+            </div>
+
+            <div class="step">
+                <h3>2. Volume Needed</h3>
+                <p>Divide desired dose by concentration to get injection volume</p>
+            </div>
+
+            <div class="step">
+                <h3>3. Syringe Units</h3>
+                <p>Convert mL to syringe units for precise measurement</p>
+            </div>
+
+            <div class="example">
+                <h3>Example</h3>
+                <ul>
+                    <li>5 mg vial + 2 mL water = 2.5 mg/mL</li>
+                    <li>Want 250 mcg (0.25 mg)?</li>
+                    <li>0.25 mg ÷ 2.5 mg/mL = 0.1 mL</li>
+                    <li>0.1 mL = 10 units on 1mL syringe</li>
+                </ul>
+            </div>
+
+            <div class="warning">
+                <div class="warning-title">
+                    ⚠️ Important:
+                </div>
+                <p>This calculator is for research purposes only. Always consult with a healthcare professional before using any peptides.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function resetCalculator() {
+            document.getElementById('vialAmount').value = 'custom';
+            document.getElementById('customAmount').value = '';
+            document.getElementById('customUnit').value = 'mcg';
+            document.getElementById('waterVolume').value = '2';
+            document.getElementById('desiredDose').value = '';
+            document.getElementById('doseUnit').value = 'mcg';
+            document.getElementById('syringeSize').value = '100';
+            document.getElementById('results').style.display = 'none';
+            toggleCustomAmount();
+        }
+
+        function toggleCustomAmount() {
+            const vialAmount = document.getElementById('vialAmount').value;
+            const customRow = document.getElementById('customAmountRow');
+            
+            if (vialAmount === 'custom') {
+                customRow.style.display = 'flex';
+            } else {
+                customRow.style.display = 'none';
+            }
+        }
+
+        function calculateDosage() {
+            // Get peptide amount in mcg
+            let vialAmountMcg;
+            const vialSelect = document.getElementById('vialAmount').value;
+            
+            if (vialSelect === 'custom') {
+                const customAmount = parseFloat(document.getElementById('customAmount').value);
+                const customUnit = document.getElementById('customUnit').value;
+                
+                if (!customAmount || customAmount <= 0) {
+                    alert('Please enter a valid custom amount');
+                    return;
+                }
+                
+                vialAmountMcg = customUnit === 'mg' ? customAmount * 1000 : customAmount;
+            } else {
+                vialAmountMcg = parseFloat(vialSelect);
+            }
+
+            // Get water volume
+            const waterVolume = parseFloat(document.getElementById('waterVolume').value);
+            
+            // Get desired dose in mcg
+            const desiredDose = parseFloat(document.getElementById('desiredDose').value);
+            const doseUnit = document.getElementById('doseUnit').value;
+            
+            if (!desiredDose || desiredDose <= 0) {
+                alert('Please enter a valid desired dose');
+                return;
+            }
+            
+            const desiredDoseMcg = doseUnit === 'mg' ? desiredDose * 1000 : desiredDose;
+            
+            // Get syringe size
+            const syringeSize = parseFloat(document.getElementById('syringeSize').value);
+
+            // Calculate concentration (mcg/mL)
+            const concentration = vialAmountMcg / waterVolume;
+            
+            // Calculate injection volume (mL)
+            const injectionVolume = desiredDoseMcg / concentration;
+            
+            // Calculate syringe units
+            const syringeUnits = injectionVolume * syringeSize;
+
+            // Display results
+            document.getElementById('concentration').textContent = `${concentration.toFixed(1)} mcg/mL`;
+            document.getElementById('injectionVolume').textContent = `${injectionVolume.toFixed(3)} mL`;
+            document.getElementById('syringeUnits').textContent = `${syringeUnits.toFixed(1)} units`;
+            
+            document.getElementById('results').style.display = 'block';
+        }
+
+        // Initialize the form
+        toggleCustomAmount();
+    </script>
+</body>
+</html>
